@@ -1,15 +1,15 @@
 # Ensure to keep up-to-date puppet agent
 class puppet {
 	
-    file { "/etc/apt/sources.list.d/puppet":
+    file { "/etc/apt/sources.list.d/puppet.list":
       ensure => file,
       content => template("${module_name}/sources.list.puppet.erb"),
     }	
 		
    exec { "/usr/bin/gpg --keyserver keyserver.ubuntu.com --recv-key 4BD6EC30":
       alias => "getgpgkey",
-      require => [ File["/etc/apt/sources.list.d/puppet"] ],
-      subscribe => [ File["/etc/apt/sources.list.d/puppet"] ],
+      require => [ File["/etc/apt/sources.list.d/puppet.list"] ],
+      subscribe => [ File["/etc/apt/sources.list.d/puppet.list"] ],
       refreshonly => true      
    }
 	
