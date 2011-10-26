@@ -27,13 +27,7 @@ class puppet {
       refreshonly => true
    }
 
-   package { "libshadow-ruby1.8":
-      ensure => latest,
-      require => Exec["aptgetupdate"];   	
-             "libselinux-ruby1.8":
-      ensure => latest,
-      require => Exec["aptgetupdate"];   	
-   	         "rubygems1.8":
+   package { "rubygems1.8":
       ensure => latest,
       require => Exec["aptgetupdate"];   	
              "puppet":
