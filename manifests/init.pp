@@ -7,35 +7,36 @@ class puppet {
     }	
 		
    exec { "/usr/bin/gpg --keyserver keyserver.ubuntu.com --recv-key 4BD6EC30":
-      alias => "getgpgkey",
+      alias => "puppet-getgpgkey",
       require => [ File["/etc/apt/sources.list.d/puppet.list"] ],
       subscribe => [ File["/etc/apt/sources.list.d/puppet.list"] ],
       refreshonly => true      
    }
 	
    exec { "/usr/bin/gpg -a --export 4BD6EC30 | /usr/bin/apt-key add -":
-      alias => "addgpgkey",
-      require => [ Exec["getgpgkey"] ],
-      subscribe => [ Exec["getgpgkey"] ],
+      alias => "puppet-addgpgkey",
+      require => [ Exec["puppet-getgpgkey"] ],
+      subscribe => [ Exec["puppet-getgpgkey"] ],
       refreshonly => true
    }
 
-   exec { "/usr/bin/apt-get update":
-      alias => "aptgetupdate",
-      require => [ Exec["addgpgkey"] ],
-      subscribe => [ Exec["addgpgkey"] ],
+   exec { "puppet-aptgetupdate":
+      command => "/usr/bin/apt-get update",
+      alias => "puppet-aptgetupdate",
+      require => [ Exec["puppet-addgpgkey"] ],
+      subscribe => [ Exec["puppet-addgpgkey"] ],
       refreshonly => true
    }
 
    package { "rubygems1.8":
       ensure => latest,
-      require => Exec["aptgetupdate"];   	
+      require => Exec["puppet-aptgetupdate"];   	
              "puppet":
       ensure => latest,
-      require => Exec["aptgetupdate"];
+      require => Exec["puppet-aptgetupdate"];
              "facter":
       ensure => latest,
-      require => Exec["aptgetupdate"];
+      require => Exec["puppet-aptgetupdate"];
    }
 	
    service { "puppet":
