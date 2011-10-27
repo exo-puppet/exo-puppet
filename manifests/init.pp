@@ -28,7 +28,13 @@ class puppet {
       refreshonly => true
    }
 
-   package { "rubygems1.8":
+   package { "libshadow-ruby1.8": 
+      ensure => latest,
+      require => Exec["puppet-aptgetupdate"];   	
+     		"lsb-release":
+      ensure => latest,
+      require => Exec["puppet-aptgetupdate"];   	
+			"rubygems1.8":
       ensure => latest,
       require => Exec["puppet-aptgetupdate"];   	
              "puppet":
@@ -38,7 +44,7 @@ class puppet {
       ensure => latest,
       require => Exec["puppet-aptgetupdate"];
    }
-	
+
    service { "puppet":
       enable => true,
       require => Package[puppet];
