@@ -9,20 +9,17 @@ class puppet {
    exec { "/usr/bin/gpg --keyserver keyserver.ubuntu.com --recv-key 4BD6EC30":
       alias => "puppet-getgpgkey",
       require => [ File["/etc/apt/sources.list.d/puppet.list"] ],
-      subscribe => [ File["/etc/apt/sources.list.d/puppet.list"] ]      
    }
 	
    exec { "/usr/bin/gpg -a --export 4BD6EC30 | /usr/bin/apt-key add -":
       alias => "puppet-addgpgkey",
       require => [ Exec["puppet-getgpgkey"] ],
-      subscribe => [ Exec["puppet-getgpgkey"] ],
    }
 
    exec { "puppet-aptgetupdate":
       command => "/usr/bin/apt-get update",
       alias => "puppet-aptgetupdate",
       require => [ Exec["puppet-addgpgkey"] ],
-      subscribe => [ Exec["puppet-addgpgkey"] ],
    }
 
    package { "libshadow-ruby1.8": 
