@@ -25,7 +25,7 @@
 #   }
 #
 # [Remember: No empty lines between comments and class definition]
-class puppet ($auto_start=true, $lastversion = "false") {
+class puppet ($auto_start=true, $lastversion = false) {
 	
 	# parameters validation
 	if ($lastversion != true) and ($lastversion != false) {
