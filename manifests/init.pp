@@ -7,6 +7,8 @@
 #    - Ubuntu 10.04 Lucid
 #
 # Parameters:
+#	$auto_start:
+#		allow puppet agent service to start at boot time or not (true / false) (default: true)
 #
 # Actions:
 #  Installs, configures, and manages the puppet service.
@@ -16,10 +18,11 @@
 # Sample Usage:
 #
 #   class { "puppet":
+#		auto_start => true,
 #   }
 #
 # [Remember: No empty lines between comments and class definition]
-class puppet {
+class puppet ($auto_start=true) {
 	
 	include puppet::params, puppet::install, puppet::config, puppet::service
 
