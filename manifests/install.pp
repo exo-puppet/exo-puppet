@@ -11,6 +11,6 @@ class puppet::install {
 	    }
     }
     
-	package { "puppet": ensure => latest, }
-	package { "facter": ensure => latest, }
+	package { "puppet": ensure => $puppet::params::ensure_mode, }
+	package { "facter": ensure => $puppet::params::ensure_mode, }
 }

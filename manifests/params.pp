@@ -3,6 +3,13 @@
 # This class manage the puppet parameters for different OS
 class puppet::params {
 	
+	$ensure_mode = $puppet::lastversion ? {
+		true => latest,
+		default => present
+	}
+	#notify { "puppet ensure mode = $ensure_mode": withpath => false }
+	info ("puppet ensure mode = $ensure_mode")
+	
 	$agent_runinterval	= "1800"
 	$pluginsync		= "true"
 	
