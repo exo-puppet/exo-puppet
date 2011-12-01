@@ -11,6 +11,22 @@ class puppet::install {
 	    }
     }
     
-	package { "puppet": ensure => $puppet::params::ensure_mode, }
-	package { "facter": ensure => $puppet::params::ensure_mode, }
+    # Agent packages
+	package { ["puppet", "facter"]: 
+		ensure => $puppet::params::ensure_mode, 
+	}
+
+    # Master packages
+	if ( $puppet::master == true ) {
+		package { "puppetmaster": 
+			ensure => $puppet::params::ensure_mode, 
+		}
+	}
+
+    # Dashboard packages
+	if ( $puppet::dashboard == true ) {
+		package { "puppet-dashboard": 
+			ensure => $puppet::params::ensure_mode, 
+		}
+	}
 }

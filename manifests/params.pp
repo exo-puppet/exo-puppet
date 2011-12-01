@@ -10,12 +10,11 @@ class puppet::params {
 	#notify { "puppet ensure mode = $ensure_mode": withpath => false }
 	info ("puppet ensure mode = $ensure_mode")
 	
-	$agent_runinterval	= "1800"
 	$pluginsync		= "true"
 	
 	case $::operatingsystem {
 		/(Ubuntu|Debian)/: {
-			$package_name			= [ "puppet", "facter" ]
+			#$package_name		 	= [ "puppet", "facter" ]
 			$service_name			= "puppet"
 			$config_file			= "/etc/puppet/puppet.conf"
 			$config_template		= "puppet.conf.erb"
@@ -25,20 +24,47 @@ class puppet::params {
 			$ssldir					= "/var/lib/puppet/ssl"
 			$rundir					= "/var/run/puppet"
 			$factpath				= "\$vardir/lib/facter"
-			$templatedir			= "\$confdir/templates"
 			
-			$master_modules_path	= "/etc/puppet-exo/modules:\$confdir/modules:/usr/share/puppet/modules"
-			$master_manifests_dir	= "/etc/puppet-exo/manifests"
-			$master_templates_dir	= "/etc/puppet-exo/templates"
+			# Agent specific configuration
+			$agent_template_dir		= "${puppet::agent_pp_dir}/templates"
 			
-			$agent_auto_start		= $puppet::auto_start ? {
+			$agent_auto_start		= $puppet::agent_auto_start ? {
 				true	=> "yes",
 				default	=> "no",
 			}
-			$agent_service_ensure	= $puppet::auto_start ? {
+			$agent_service_ensure	= $puppet::agent_auto_start ? {
 				true	=> "running",
 				default	=> "stopped",
 			}
+			
+			# Master specific configuration
+			$master_service_name	= "puppetmaster"
+
+			$master_modules_path	= "${puppet::master_pp_dir}/modules:/usr/share/puppet/modules"
+			$master_manifests_dir	= "${puppet::master_pp_dir}/manifests"
+			$master_templates_dir	= "${puppet::master_pp_dir}/templates"
+			
+			$master_auto_start		= $puppet::master_auto_start ? {
+				true	=> "yes",
+				default	=> "no",
+			}
+			$master_service_ensure	= $puppet::master_auto_start ? {
+				true	=> "running",
+				default	=> "stopped",
+			}
+			
+			# Dashboard specific configuration
+			$dashboard_service_name	= ["puppet-dashboard", "puppet-dashboard-workers"]
+
+			$dashboard_auto_start		= $puppet::dashboard_auto_start ? {
+				true	=> "yes",
+				default	=> "no",
+			}
+			$dashboard_service_ensure	= $puppet::dashboard_auto_start ? {
+				true	=> "running",
+				default	=> "stopped",
+			}
+			
 			
 		}
 		default: {
