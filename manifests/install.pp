@@ -9,7 +9,7 @@ class puppet::install {
                 file_name   => "puppetlab",
                 url         => "http://apt.puppetlabs.com/ubuntu",
                 sections    => ["main"],
-                source      => true,
+                source      => false,
                 key         => "4BD6EC30",
                 key_server  => "keyserver.ubuntu.com",
                 notify      => Exec["repo-update"],
