@@ -94,7 +94,7 @@
 #
 #   class { "puppet":
 #       agent_auto_start    => true,
-#       lastversion         => false,
+#       lastversion         => true,
 #       master              => false,
 #       master_fqdn         => puppet.${::domain},
 #   }
@@ -103,7 +103,7 @@
 #
 #   class { "puppet":
 #       agent_auto_start    => true,
-#       lastversion         => false,
+#       lastversion         => true,
 #       master              => true,
 #       master_auto_start   => true,
 #       master_fqdn         => puppet.${::domain},
