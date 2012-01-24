@@ -32,6 +32,8 @@ templatedir = <%= scope.lookupvar('puppet::params::agent_template_dir') %>
 runinterval = <%= scope.lookupvar('puppet::agent_runinterval') %>
 report      = true
 
+certname    =  <%= scope.lookupvar('::fqdn') %>
+
 ######################################
 [master]
 ######################################
