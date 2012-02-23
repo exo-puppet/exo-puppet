@@ -15,7 +15,7 @@ class puppet::install {
                 notify      => Exec["repo-update"],
             }
             
-            # this fil eremover is here to clean up puppet.list manually added during system installation
+            # this file remover is here to clean up puppet.list manually added during system installation
             repo::define { "puppetlab-oldfile":
                 file_name   => "puppet",
                 url         => "http://apt.puppetlabs.com/ubuntu",
@@ -24,13 +24,35 @@ class puppet::install {
                 installed   => false,
                 notify  => Exec["repo-update"],
             }
+            
+            # We need to upgrade augeas and libaugeas_ruby from non official packages
+            # to avoid some bugs/incompatibilities like to edit limits files under
+            # /etc/security/limits.d/
+            case $::lsbdistrelease {
+                /(10.04)/: {
+
+                    repo::define { "skettler-ppa-repo":
+                        file_name   => "skettler-ppa",
+                        url         => "http://ppa.launchpad.net/skettler/puppet/ubuntu",
+                        sections    => ["main"],
+                        source      => true,
+                        key         => "C18789EA",
+                        key_server  => "keyserver.ubuntu.com",
+                        notify      => Exec["repo-update"],
+                    }                    
+                }
+                default: {}
+            }            
 	    }
     }
     
     # Agent packages
 	package { ["puppet", "facter"]: 
         ensure    => $puppet::params::ensure_mode, 
-        require   => [ Exec ["repo-update"], Repo::Define [ "puppetlab-repo" ] ],
+        require   => [ 
+            Exec ["repo-update"], 
+            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}  
+        ],
 	}
 
     # Master packages
