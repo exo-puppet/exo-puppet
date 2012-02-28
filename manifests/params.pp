@@ -10,7 +10,7 @@ class puppet::params {
 	#notify { "puppet ensure mode = $ensure_mode": withpath => false }
 	info ("puppet ensure mode = $ensure_mode")
 	
-	$pluginsync		= "true"
+	$pluginsync		= true
 	
 	case $::operatingsystem {
 		/(Ubuntu|Debian)/: {
