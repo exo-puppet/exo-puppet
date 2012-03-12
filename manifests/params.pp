@@ -20,8 +20,11 @@ class puppet::params {
 			$config_template		= "puppet.conf.erb"
 			
 			$logdir					= "/var/log/puppet"
-			$vardir					= "/var/lib/puppet"
-			$ssldir					= "/var/lib/puppet/ssl"
+			$libdir                 = "/var/lib"
+			$vardir					= "${libdir}/puppet"
+			$ssldir					= "${libdir}/puppet/ssl"
+			$reportsdir             = "${libdir}/puppet/reports"
+			
 			$rundir					= "/var/run/puppet"
 			$factpath				= "\$vardir/lib/facter"
 			

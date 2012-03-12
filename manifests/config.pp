@@ -43,6 +43,19 @@ class puppet::config {
 			require => Class["puppet::install"],
 			notify => Class["puppet::service"],
 		}
+        file { '/usr/local/bin/puppet-reports-stalker':
+            content => template("puppet/puppet-reports-stalker.erb"),
+            mode   =>  755,
+            owner  =>  root,
+            group  =>  root,
+        } ->
+        cron { 'puppet clean reports':
+           command =>  '/usr/local/bin/puppet-reports-stalker',
+           user =>  root,
+           hour =>  21,
+           minute =>  22,
+           weekday =>  0,
+         }
 	}
 	
 	# TODO finish to implement Puppet Dashboard Configuration

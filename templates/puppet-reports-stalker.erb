@@ -1,0 +1,21 @@
+#! /bin/sh -ue
+
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+
+# puppet-reports-stalker
+# Source: https://groups.google.com/forum/#!msg/puppet-users/q8vWDr3bn4Q/nsjpAHPsvrEJ
+
+days="+7"       # more than 7 days old
+
+for d in `find <%= scope.lookupvar('puppet::params::reportsdir') %> -mindepth 1 -maxdepth 1 -type d`
+do
+         find $d -type f -name \*.yaml -mtime $days |
+         sort -r |
+         tail -n +2 |
+         xargs -n50 /bin/rm -f
+done
+
+exit 0
