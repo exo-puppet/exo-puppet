@@ -110,7 +110,7 @@
 #   }
 #
 ################################################################################
-class puppet (	$lastversion = false, 
+class puppet (	$lastversion = false,   $repo_apt_url           ="http://apt.puppetlabs.com/ubuntu",
 										$agent_auto_start 		= true, 																			$agent_pp_dir 	= "/etc/puppet",	$agent_runinterval = "1800",
 				$master 	= false, 	$master_auto_start 		= true, 	$master_fqdn 	= "puppet.${::domain}", 	$master_port 	= "8140", 	$master_pp_dir	= "/etc/puppet",	$master_dns_alt_name = "",
 				$dashboard 	= false, 	$dashboard_auto_start 	= true, 	$dashboard_fqdn = "dashboard.${::domain}", 	$dashboard_port	= "3000" 

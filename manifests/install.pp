@@ -7,7 +7,7 @@ class puppet::install {
 		/(Ubuntu|Debian)/: {
             repo::define { "puppetlab-repo":
                 file_name   => "puppetlab",
-                url         => "http://apt.puppetlabs.com/ubuntu",
+                url         => $puppet::repo_apt_url,
                 sections    => ["main"],
                 source      => false,
                 key         => "4BD6EC30",
