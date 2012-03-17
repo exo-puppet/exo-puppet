@@ -43,7 +43,11 @@ class puppet::params {
 			# Master specific configuration
 			$master_service_name	= "puppetmaster"
 
-			$master_modules_path	= "${puppet::master_pp_dir}/modules:/usr/share/puppet/modules"
+            if ( $puppet::master_other_modules_dirs == "") {
+                $master_modules_path    = "${puppet::master_pp_dir}/modules:/usr/share/puppet/modules"
+            } else {
+                $master_modules_path    = "${puppet::master_pp_dir}/modules:${puppet::master_other_modules_dirs}:/usr/share/puppet/modules"
+            }
 			$master_manifests_dir	= "${puppet::master_pp_dir}/manifests"
 			$master_templates_dir	= "${puppet::master_pp_dir}/templates"
 			

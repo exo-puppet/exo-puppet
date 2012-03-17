@@ -19,6 +19,11 @@
 #   
 #   allow puppet agent service to start at boot time (true) or not (false)
 #
+# [+repo_apt_url+]
+#   (OPTIONAL) (default: http://apt.puppetlabs.com/ubuntu)
+#   
+#   the url of the deb repository for PuppetLabs.
+#
 # [+agent_pp_dir+]
 #   (OPTIONAL) (default: /etc/puppet)
 #   
@@ -53,6 +58,12 @@
 #   (OPTIONAL) (default: /etc/puppet)
 #   
 #   The master puppet parent directory specify where is stored the puppet configuration for master
+#master_other_modules_dirs
+# [+master_other_modules_dirs+]
+#   (OPTIONAL) (default: "")
+#   
+#   this parameter allow us to add complementary directories for Puppet Master to search modules.
+#   IMPORTANT : each directory must be separated by a semicolon (ex: /my/directory/number1:/my/directory/number2)
 #
 # [+master_dns_alt_name+]
 #   (OPTIONAL) (default: )
@@ -112,7 +123,7 @@
 ################################################################################
 class puppet (	$lastversion = false,   $repo_apt_url           ="http://apt.puppetlabs.com/ubuntu",
 										$agent_auto_start 		= true, 																			$agent_pp_dir 	= "/etc/puppet",	$agent_runinterval = "1800",
-				$master 	= false, 	$master_auto_start 		= true, 	$master_fqdn 	= "puppet.${::domain}", 	$master_port 	= "8140", 	$master_pp_dir	= "/etc/puppet",	$master_dns_alt_name = "",
+				$master 	= false, 	$master_auto_start 		= true, 	$master_fqdn 	= "puppet.${::domain}", 	$master_port 	= "8140", 	$master_pp_dir = "/etc/puppet",     $master_other_modules_dirs = "",    $master_dns_alt_name = "",
 				$dashboard 	= false, 	$dashboard_auto_start 	= true, 	$dashboard_fqdn = "dashboard.${::domain}", 	$dashboard_port	= "3000" 
 			 ) {
 	
