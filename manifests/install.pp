@@ -41,6 +41,18 @@ class puppet::install {
                         notify      => Exec["repo-update"],
                     }                    
                 }
+                /(10.10)/: {
+
+                    repo::define { "raphink-ppa-repo":
+                        file_name   => "raphink-ppa",
+                        url         => "http://ppa.launchpad.net/raphink/augeas/ubuntu",
+                        sections    => ["main"],
+                        source      => true,
+                        key         => "AE498453",
+                        key_server  => "keyserver.ubuntu.com",
+                        notify      => Exec["repo-update"],
+                    }                    
+                }
                 default: {}
             }            
 	    }
@@ -51,7 +63,7 @@ class puppet::install {
         ensure    => $puppet::params::ensure_mode, 
         require   => [ 
             Exec ["repo-update"], 
-            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}  
+            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], /(10.10)/ => Repo::Define [ "puppetlab-repo", "raphink-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}  
         ],
 	}
 
