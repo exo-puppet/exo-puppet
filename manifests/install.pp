@@ -2,7 +2,7 @@
 #
 # This class manage the installation of the puppet package
 class puppet::install {
-	
+
 	case $::operatingsystem {
 		/(Ubuntu|Debian)/: {
             repo::define { "puppetlab-repo":
@@ -14,7 +14,7 @@ class puppet::install {
                 key_server  => "keyserver.ubuntu.com",
                 notify      => Exec["repo-update"],
             }
-            
+
             # this file remover is here to clean up puppet.list manually added during system installation
             repo::define { "puppetlab-oldfile":
                 file_name   => "puppet",
@@ -24,7 +24,7 @@ class puppet::install {
                 installed   => false,
                 notify  => Exec["repo-update"],
             }
-            
+
             # We need to upgrade augeas and libaugeas_ruby from non official packages
             # to avoid some bugs/incompatibilities like to edit limits files under
             # /etc/security/limits.d/
@@ -39,7 +39,7 @@ class puppet::install {
                         key         => "C18789EA",
                         key_server  => "keyserver.ubuntu.com",
                         notify      => Exec["repo-update"],
-                    }                    
+                    }
                 }
                 /(10.10)/: {
 
@@ -51,13 +51,13 @@ class puppet::install {
                         key         => "AE498453",
                         key_server  => "keyserver.ubuntu.com",
                         notify      => Exec["repo-update"],
-                    }                    
+                    }
                 }
                 default: {}
-            }            
+            }
 	    }
     }
-    
+
     # Agent packages
 	package { ["puppet", "facter"]: 
         ensure    => $puppet::params::ensure_mode, 
