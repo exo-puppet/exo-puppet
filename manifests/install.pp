@@ -59,26 +59,40 @@ class puppet::install {
     }
 
     # Agent packages
-	package { ["puppet", "facter"]: 
-        ensure    => $puppet::params::ensure_mode, 
-        require   => [ 
-            Exec ["repo-update"], 
-            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], /(10.10)/ => Repo::Define [ "puppetlab-repo", "raphink-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}  
+  package { ["libaugeas-ruby1.8"]:
+        ensure    => "latest",
+        require   => [
+            Exec ["repo-update"],
+            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], /(10.10)/ => Repo::Define [ "puppetlab-repo", "raphink-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}
         ],
-	}
+  } ->
+  package { ["augeas-tools", "augeas-lenses"]:
+        ensure    => "latest",
+        require   => [
+            Exec ["repo-update"],
+            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], /(10.10)/ => Repo::Define [ "puppetlab-repo", "raphink-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}
+        ],
+  } ->
+  package { ["puppet", "facter"]:
+        ensure    => $puppet::params::ensure_mode,
+        require   => [
+            Exec ["repo-update"],
+            $::lsbdistrelease ? {/(10.04)/ => Repo::Define [ "puppetlab-repo", "skettler-ppa-repo" ], /(10.10)/ => Repo::Define [ "puppetlab-repo", "raphink-ppa-repo" ], default => Repo::Define [ "puppetlab-repo" ]}
+        ],
+  }
 
     # Master packages
 	if ( $puppet::master == true ) {
-		package { "puppetmaster": 
-            ensure      => $puppet::params::ensure_mode, 
+		package { "puppetmaster":
+            ensure      => $puppet::params::ensure_mode,
             require   => [ Exec ["repo-update"], Repo::Define [ "puppetlab-repo" ] ],
 		}
 	}
 
     # Dashboard packages
 	if ( $puppet::dashboard == true ) {
-		package { "puppet-dashboard": 
-            ensure  => $puppet::params::ensure_mode, 
+		package { "puppet-dashboard":
+            ensure  => $puppet::params::ensure_mode,
             require   => [ Exec ["repo-update"], Repo::Define [ "puppetlab-repo" ] ],
 		}
 	}
