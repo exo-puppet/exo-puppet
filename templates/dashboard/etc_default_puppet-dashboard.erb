@@ -8,10 +8,12 @@
 # created and migrated the database.
 
 # Uncomment the line below to start Puppet Dashboard.
-START=<%= scope.lookupvar('puppet::params::dashboard_auto_start') %>
+# We don't want puppet-dashboard with WebRick but with Apache
+#START=<%= scope.lookupvar('puppet::params::dashboard_auto_start') %>
+START=false
 
 # Location where puppet-dashboard is installed:
-DASHBOARD_HOME=/usr/share/puppet-dashboard
+DASHBOARD_HOME=<%= scope.lookupvar('puppet::params::dashboard_home') %>
 
 # User which runs the puppet-dashboard program:
 DASHBOARD_USER=www-data
