@@ -105,6 +105,12 @@
 #
 #   the database password used by puppet dashboard to connect to the dashboard database
 #
+# [+dashboard_workers_nb+]
+#   (OPTIONAL) (default: 2)
+#
+#   Number of dashboard workers to start. This will be the number of jobs that can be concurrently processed.
+#   A simple recommendation would be to start with the number of cores you have available.
+#
 # == Modules Dependencies
 #
 # [+repo+]
@@ -139,10 +145,8 @@
 class puppet (	$lastversion = false,      $repo_apt_url ="http://apt.puppetlabs.com/ubuntu",
                 $agent_auto_start = true,  $agent_pp_dir 	= "/etc/puppet",	$agent_runinterval = "1800",
 				        $master 	= false, 	       $master_auto_start 		= true, 	$master_fqdn 	= "puppet.${::domain}", 	   $master_port 	= "8140", 	$master_pp_dir = "/etc/puppet",   $master_other_modules_dirs = "",   $master_dns_alt_name = "",
-				        $dashboard 	= false, 	     $dashboard_auto_start 	= true, 	$dashboard_fqdn = "dashboard.${::domain}", $dashboard_port	= "3000", $dashboard_db_name = "dashboard", $dashboard_db_user = "dashboard",  $dashboard_db_pwd = "dashboard",
+				        $dashboard 	= false, 	     $dashboard_auto_start 	= true, 	$dashboard_fqdn = "dashboard.${::domain}", $dashboard_port	= "3000", $dashboard_db_name = "dashboard", $dashboard_db_user = "dashboard",  $dashboard_db_pwd = "dashboard", $dashboard_workers_nb = "2",
 			 ) {
-
-	# TODO Implement Apache Passenger support for Puppet Master (need vhost and conf.d feature of new apache2 module - SWF-1621)
 
 	include repo
 
