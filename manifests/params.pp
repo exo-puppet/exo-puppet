@@ -32,31 +32,35 @@ class puppet::params {
 			$agent_template_dir		= "${puppet::agent_pp_dir}/templates"
 
 			$agent_auto_start		= $puppet::agent_auto_start ? {
-				true	=> "yes",
+				true	  => "yes",
+				false	  => "no",
 				default	=> "no",
 			}
 			$agent_service_ensure	= $puppet::agent_auto_start ? {
-				true	=> "running",
+				true	  => "running",
+				false	  => "stopped",
 				default	=> "stopped",
 			}
 
 			# Master specific configuration
 			$master_service_name	= "puppetmaster"
 
-            if ( $puppet::master_other_modules_dirs == "") {
-                $master_modules_path    = "${puppet::master_pp_dir}/modules:/usr/share/puppet/modules"
-            } else {
-                $master_modules_path    = "${puppet::master_pp_dir}/modules:${puppet::master_other_modules_dirs}:/usr/share/puppet/modules"
-            }
+       if ( $puppet::master_other_modules_dirs == "") {
+         $master_modules_path    = "${puppet::master_pp_dir}/modules:/usr/share/puppet/modules"
+       } else {
+         $master_modules_path    = "${puppet::master_pp_dir}/modules:${puppet::master_other_modules_dirs}:/usr/share/puppet/modules"
+       }
 			$master_manifests_dir	= "${puppet::master_pp_dir}/manifests"
 			$master_templates_dir	= "${puppet::master_pp_dir}/templates"
 
 			$master_auto_start		= $puppet::master_auto_start ? {
-				true	=> "yes",
+				true	  => "yes",
+				false	  => "no",
 				default	=> "no",
 			}
 			$master_service_ensure	= $puppet::master_auto_start ? {
-				true	=> "running",
+				true	  => "running",
+				false	  => "stopped",
 				default	=> "stopped",
 			}
 
@@ -66,11 +70,13 @@ class puppet::params {
 			$dashboard_home          = "/usr/share/puppet-dashboard"
 
 			$dashboard_auto_start    = $puppet::dashboard_auto_start ? {
-				true	=> "yes",
+				true	  => "yes",
+				false	  => "no",
 				default	=> "no",
 			}
 			$dashboard_service_ensure	= $puppet::dashboard_auto_start ? {
-				true	=> "running",
+				true	  => "running",
+				false	  => "stopped",
 				default	=> "stopped",
 			}
 
