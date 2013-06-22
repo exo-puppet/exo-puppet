@@ -90,4 +90,9 @@ class puppet::install {
 	if ( $puppet::dashboard == true ) {
 		include puppet::dashboard::install
 	}
+
+    # Foreman packages
+  if ( $puppet::foreman == true ) {
+    include puppet::foreman::install
+  }
 }

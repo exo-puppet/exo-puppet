@@ -29,6 +29,10 @@ class puppet::config {
     include puppet::dashboard::config
 	}
 
+  if ( $puppet::foreman == true ) {
+    include puppet::foreman::config
+  }
+
 	# puppet agent and master configuration file
 	file { $puppet::params::config_file:
 		ensure => file,

@@ -25,4 +25,9 @@ class puppet::service {
 	if ( $puppet::dashboard == true ) {
     include puppet::dashboard::service
 	}
+
+  # Foreman Service
+  if ( $puppet::foreman == true ) {
+    include puppet::foreman::service
+  }
 }

@@ -60,9 +60,9 @@ manifestdir               = <%= scope.lookupvar('puppet::params::master_manifest
 # The default value is '$vardir/templates'.
 templatedir               = <%= scope.lookupvar('puppet::params::master_templates_dir') %>
 
-reports                   = store, log, http
+reports                   = store, log, foreman
 <% if scope.lookupvar('puppet::master') == true %>
 # The server to send transaction reports to.
 # The default value is '$server'.
-reporturl                = http://<%= scope.lookupvar('puppet::dashboard_fqdn') %>:<%= scope.lookupvar('puppet::dashboard_port') %>/reports/upload
+#reporturl                = http://<%= scope.lookupvar('puppet::dashboard_fqdn') %>:<%= scope.lookupvar('puppet::dashboard_port') %>/reports/upload
 <% end %>
