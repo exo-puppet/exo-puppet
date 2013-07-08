@@ -12,7 +12,8 @@
 # [+lastversion+]
 #   (OPTIONAL) (default: false)
 #
-#   this variable allow to chose if the package should always be updated to the last available version (true) or not (false) (default: false)
+#   this variable allow to chose if the package should always be updated to the last available version (true) or not (false)
+#   (default: false)
 #
 # [+agent_auto_start+]
 #   (OPTIONAL) (default: true)
@@ -58,7 +59,7 @@
 #   (OPTIONAL) (default: /etc/puppet)
 #
 #   The master puppet parent directory specify where is stored the puppet configuration for master
-#master_other_modules_dirs
+# master_other_modules_dirs
 # [+master_other_modules_dirs+]
 #   (OPTIONAL) (default: "")
 #
@@ -68,7 +69,8 @@
 # [+master_dns_alt_name+]
 #   (OPTIONAL) (default: )
 #
-#   a comma separated list of fully qualified name DNS aliases for the master nodes (it only make sens on the node with puppet master)
+#   a comma separated list of fully qualified name DNS aliases for the master nodes (it only make sens on the node with puppet
+#   master)
 #
 # [+dashboard+]
 #   (OPTIONAL) (default: false)
@@ -142,26 +144,46 @@
 #   }
 #
 ################################################################################
-class puppet (	$lastversion = false,       $repo_apt_url ="http://apt.puppetlabs.com/ubuntu",
-                $agent_auto_start = true,   $agent_pp_dir 	= "/etc/puppet",	  $agent_runinterval = "1800",
-				        $master 	= false, 	        $master_auto_start 		= true,       $master_fqdn 	= "puppet.${::domain}", 	    $master_port 	= "8140", 	$master_pp_dir = "/etc/puppet",   $master_other_modules_dirs = "",   $master_dns_alt_name = "",
-				        $dashboard 	= false, 	      $dashboard_auto_start 	= true, 	  $dashboard_fqdn = "dashboard.${::domain}",  $dashboard_port	= "3000", $dashboard_db_name = "dashboard", $dashboard_db_user = "dashboard",  $dashboard_db_pwd = "dashboard", $dashboard_workers_nb = "2",
-				        $foreman = false,           $foreman_fqdn="forman.${::domain}", $foreman_ip = "127.0.0.1",                  $foreman_port = 3000,
-			 ) {
+class puppet (
+  $lastversion               = false,
+  $repo_apt_url              = 'http://apt.puppetlabs.com/ubuntu',
+  $agent_auto_start          = true,
+  $agent_pp_dir              = '/etc/puppet',
+  $agent_runinterval         = '1800',
+  $master                    = false,
+  $master_auto_start         = true,
+  $master_fqdn               = "puppet.${::domain}",
+  $master_port               = '8140',
+  $master_pp_dir             = '/etc/puppet',
+  $master_other_modules_dirs = '',
+  $master_dns_alt_name       = '',
+  $dashboard                 = false,
+  $dashboard_auto_start      = true,
+  $dashboard_fqdn            = "dashboard.${::domain}",
+  $dashboard_port            = '3000',
+  $dashboard_db_name         = 'dashboard',
+  $dashboard_db_user         = 'dashboard',
+  $dashboard_db_pwd          = 'dashboard',
+  $dashboard_workers_nb      = '2',
+  $foreman                   = false,
+  $foreman_fqdn              = "forman.${::domain}",
+  $foreman_ip                = '127.0.0.1',
+  $foreman_port              = 3000,) {
+  include repo
 
-	include repo
+  # parameters validation
+  if ($lastversion != true) and ($lastversion != false) {
+    fail('lastversion parameter must be true or false')
+  }
 
-	# parameters validation
-	if ($lastversion != true) and ($lastversion != false) {
-		fail("lastversion parameter must be true or false")
-	}
-	if ($master != true) and ($master != false) {
-		fail("master parameter must be true or false")
-	}
-	if ($dashboard != true) and ($dashboard != false) {
-		fail("dashboard parameter must be true or false")
-	}
+  if ($master != true) and ($master != false) {
+    fail('master parameter must be true or false')
+  }
 
-	include puppet::params, puppet::install, puppet::config, puppet::service
+  if ($dashboard != true) and ($dashboard != false) {
+    fail('dashboard parameter must be true or false')
+  }
+
+  include puppet::params, puppet::install, puppet::config, puppet::service
 
 }

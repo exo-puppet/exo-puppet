@@ -2,11 +2,13 @@
 #
 # This class manage the installation of the puppet package
 class puppet::dashboard::install {
-  package { "rack":
-    ensure   => "1.1.2",
+  package { 'rack':
+    ensure   => '1.1.2',
     provider => 'gem',
-  } -> package { "puppet-dashboard":
+  } -> package { 'puppet-dashboard':
     ensure  => $puppet::params::ensure_mode,
-    require => [Exec["repo-update"], Repo::Define["puppetlab-repo"]],
+    require => [
+      Exec['repo-update'],
+      Repo::Define['puppetlab-repo']],
   }
 }

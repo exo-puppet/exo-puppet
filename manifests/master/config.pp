@@ -16,18 +16,18 @@ class puppet::master::config {
     mode   => 0755,
   }
 
-  file { "/etc/default/puppetmaster":
+  file { '/etc/default/puppetmaster':
     ensure  => file,
     owner   => root,
     group   => root,
     mode    => 0644,
-    content => template("puppet/etc_default_puppetmaster.erb"),
-    require => Class["puppet::master::install"],
-    notify  => Class["puppet::master::service"],
+    content => template('puppet/etc_default_puppetmaster.erb'),
+    require => Class['puppet::master::install'],
+    notify  => Class['puppet::master::service'],
   }
 
   file { '/usr/local/bin/puppet-reports-stalker':
-    content => template("puppet/puppet-reports-stalker.erb"),
+    content => template('puppet/puppet-reports-stalker.erb'),
     mode    => 755,
     owner   => root,
     group   => root,
@@ -40,31 +40,31 @@ class puppet::master::config {
   }
 
   # Install the foreman report
-  file { "/usr/lib/ruby/1.8/puppet/reports/foreman.rb":
+  file { '/usr/lib/ruby/1.8/puppet/reports/foreman.rb':
     ensure  => file,
     owner   => root,
     group   => root,
     mode    => 0644,
-    content => template("puppet/foreman/foreman.rb.erb"),
+    content => template('puppet/foreman/foreman.rb.erb'),
   }
 
   # Install the foreman push_facts.rb script + cronjob
-  file { "/etc/puppet/foreman_push_facts.rb":
+  file { '/etc/puppet/foreman_push_facts.rb':
+    ensure  => $puppet::master ? {
+      true    => 'present',
+      default => 'absent',
+    },
     owner   => puppet,
     group   => puppet,
     mode    => 555,
-    content => template("puppet/foreman/push_facts.rb.erb"),
+    content => template('puppet/foreman/push_facts.rb.erb'),
+  } -> cron { 'send_facts_to_foreman':
     ensure  => $puppet::master ? {
-      default => "absent",
-      true    => "present"
+      true    => 'present',
+      default => 'absent',
     },
-  } -> cron { "send_facts_to_foreman":
-    command => "/etc/puppet/foreman_push_facts.rb",
-    user    => "puppet",
-    minute  => "*/5",
-    ensure  => $puppet::master ? {
-      default => "absent",
-      true    => "present"
-    },
+    command => '/etc/puppet/foreman_push_facts.rb',
+    user    => 'puppet',
+    minute  => '*/5',
   }
 }
