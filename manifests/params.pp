@@ -24,6 +24,8 @@ class puppet::params {
       $ssldir               = "${libdir}/puppet/ssl"
       $reportsdir           = "${libdir}/puppet/reports"
 
+      $basedir              = '/usr/lib/ruby/vendor_ruby/puppet'
+
       $rundir               = '/var/run/puppet'
       $factpath             = "\$vardir/lib/facter"
 

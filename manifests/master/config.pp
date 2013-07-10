@@ -40,12 +40,20 @@ class puppet::master::config {
   }
 
   # Install the foreman report
-  file { '/usr/lib/ruby/1.8/puppet/reports/foreman.rb':
+  exec { 'create-puppet-reports-dir':
+    command => "/bin/mkdir -p ${$puppet::params::basedir}/reports",
+    creates => "${puppet::params::basedir}/reports"
+  }
+
+  file { "${puppet::params::basedir}/reports/foreman.rb":
     ensure  => file,
     owner   => root,
     group   => root,
     mode    => 0644,
     content => template('puppet/foreman/foreman.rb.erb'),
+    require => [
+      Exec['create-puppet-reports-dir'],
+      Class['puppet::master::install']],
   }
 
   # Install the foreman push_facts.rb script + cronjob
