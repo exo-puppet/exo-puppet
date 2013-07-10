@@ -64,7 +64,7 @@ class puppet::install {
   # Agent packages
   package { [
     'libaugeas-ruby1.8']:
-    ensure  => 'latest',
+    ensure  => $puppet::params::ensure_mode,
     require => [
       Exec['repo-update'],
       $::lsbdistrelease ? {
@@ -75,7 +75,7 @@ class puppet::install {
   } -> package { [
     'augeas-tools',
     'augeas-lenses']:
-    ensure  => 'latest',
+    ensure  => $puppet::params::ensure_mode,
     require => [
       Exec['repo-update'],
       $::lsbdistrelease ? {
