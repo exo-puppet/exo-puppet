@@ -146,7 +146,7 @@
 ################################################################################
 class puppet (
   $lastversion               = false,
-  $repo_apt_url              = 'http://apt.puppetlabs.com/ubuntu',
+  $repo_apt_url              = 'http://apt.puppetlabs.com',
   $agent_auto_start          = true,
   $agent_pp_dir              = '/etc/puppet',
   $agent_runinterval         = '1800',

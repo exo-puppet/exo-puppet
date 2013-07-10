@@ -8,7 +8,8 @@ class puppet::install {
         file_name  => 'puppetlab',
         url        => $puppet::repo_apt_url,
         sections   => [
-          'main'],
+          'main',
+          'dependencies'],
         source     => false,
         key        => '4BD6EC30',
         key_server => 'keyserver.ubuntu.com',
