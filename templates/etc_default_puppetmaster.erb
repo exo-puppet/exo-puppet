@@ -40,4 +40,4 @@ PUPPETMASTERS=1
 # processes.  In this case it is recommended to run your web-proxy on
 # port 8140 and change the below number to something else, such as
 # 18140.
-PORT=<%= scope.lookupvar('puppet::params::master_port') %>
+PORT=<%= scope.lookupvar('puppet::master_port') %>
