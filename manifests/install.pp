@@ -5,15 +5,21 @@ class puppet::install {
   case $::operatingsystem {
     /(Ubuntu|Debian)/ : {
       repo::define { 'puppetlab-repo':
-        file_name  => 'puppetlab',
-        url        => $puppet::repo_apt_url,
-        sections   => [
+        file_name    => 'puppetlab',
+        url          => $puppet::repo_apt_url,
+        # Natty Nawarl (11.04) is EOL and puppet labs doesn't provide anymore a package for it.
+        # We install lucid packages instead
+        distribution => $::lsbdistrelease ? {
+          /(11.04)/ => 'lucid',
+          default   => '',
+        },
+        sections     => [
           'main',
           'dependencies'],
-        source     => false,
-        key        => '4BD6EC30',
-        key_server => 'keyserver.ubuntu.com',
-        notify     => Exec['repo-update'],
+        source       => false,
+        key          => '4BD6EC30',
+        key_server   => 'keyserver.ubuntu.com',
+        notify       => Exec['repo-update'],
       }
 
       # this file remover is here to clean up puppet.list manually added during system installation
