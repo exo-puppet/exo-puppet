@@ -35,6 +35,9 @@ report      = true
 
 certname    =  <%= scope.lookupvar('::fqdn') %>
 
+# Environment to use to provision this server
+environment = <%= scope.lookupvar('puppet::environment') %>
+
 ######################################
 [master]
 ######################################
