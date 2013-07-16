@@ -2,19 +2,19 @@
 #
 # This class manage the puppet configuration
 class puppet::master::config {
-  file { $puppet::params::master_manifests_dir:
-    ensure => directory,
-    owner  => root,
-    group  => root,
-    mode   => 0755,
-  }
-
-  file { $puppet::params::master_templates_dir:
-    ensure => directory,
-    owner  => root,
-    group  => root,
-    mode   => 0755,
-  }
+#  file { $puppet::params::master_manifests_dir:
+#    ensure => directory,
+#    owner  => root,
+#    group  => root,
+#    mode   => 0755,
+#  }
+#
+#  file { $puppet::params::master_templates_dir:
+#    ensure => directory,
+#    owner  => root,
+#    group  => root,
+#    mode   => 0755,
+#  }
 
   file { '/etc/default/puppetmaster':
     ensure  => file,

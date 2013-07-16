@@ -18,6 +18,7 @@ class puppet::params {
       $config_file          = '/etc/puppet/puppet.conf'
       $config_template      = 'puppet.conf.erb'
 
+      $confdir              = '/etc/puppet'
       $logdir               = '/var/log/puppet'
       $libdir               = '/var/lib'
       $vardir               = "${libdir}/puppet"
