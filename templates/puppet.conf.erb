@@ -38,6 +38,16 @@ certname    =  <%= scope.lookupvar('::fqdn') %>
 # Environment to use to provision this server
 environment = <%= scope.lookupvar('puppet::environment') %>
 
+# Whether puppet agent should listen for connections. 
+# If this is true, then puppet agent will accept incoming REST API requests, 
+# subject to the default ACLs and the ACLs set in the rest_authconfig file. 
+# Puppet agent can respond usefully to requests on the run, facts, certificate, and resource endpoints.
+listen = <%= scope.lookupvar('puppet::agent_listen') %>
+
+# Which port puppet agent listens on.
+# The default value is '8139'.
+puppetport  = <%= scope.lookupvar('puppet::agent_port') %>
+
 ######################################
 [master]
 ######################################

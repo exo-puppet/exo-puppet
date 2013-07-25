@@ -44,5 +44,16 @@ class puppet::config {
       File['/etc/default/puppet']],
     notify  => Class['puppet::service'],
   }
+  file { $puppet::params::auth_file:
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => 0644,
+    content => template("puppet/${puppet::params::auth_template}"),
+    require => [
+      Class['puppet::install'],
+      File['/etc/default/puppet']],
+    notify  => Class['puppet::service'],
+  }
 
 }

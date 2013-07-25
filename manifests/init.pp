@@ -35,6 +35,18 @@
 #
 #   The frequency for the puppet agent to execute in seconds
 #
+# [+agent_port+]
+#   (OPTIONAL) (default: 8139)
+#
+#   Which port puppet agent listens on.
+#
+# [+agent_listen+]
+#   (OPTIONAL) (default: false)
+#
+#   Whether puppet agent should listen for connections. If this is true, then puppet agent will accept incoming REST API requests,
+#   subject to the default ACLs and the ACLs set in the rest_authconfig file. Puppet agent can respond usefully to requests on the
+#   run, facts, certificate, and resource endpoints.
+#
 # [+master+]
 #   (OPTIONAL) (default: false)
 #
@@ -53,7 +65,7 @@
 # [+master_port+]
 #   (OPTIONAL) (default: 8140)
 #
-#   the port used by puppet master to listen for agent connexions
+#   the port used by puppet master to listen for agent connections
 #
 # [+master_pp_dir+]
 #   (OPTIONAL) (default: /etc/puppet)
@@ -151,6 +163,8 @@ class puppet (
   $agent_auto_start          = true,
   $agent_pp_dir              = '/etc/puppet',
   $agent_runinterval         = '1800',
+  $agent_port                = '8139',
+  $agent_listen              = false,
   $master                    = false,
   $master_auto_start         = true,
   $master_fqdn               = "puppet.${::domain}",
