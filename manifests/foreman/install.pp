@@ -40,5 +40,6 @@ class puppet::foreman::install {
     require => [
       Exec['repo-update'],
       Repo::Define['foreman-repo']],
-  } -> package { 'foreman-mysql': ensure => $puppet::params::ensure_mode, }
+  } -> package { 'foreman-mysql': ensure => $puppet::params::ensure_mode, } -> package { 'foreman-sqlite3': ensure =>
+    $puppet::params::ensure_mode, }
 }
