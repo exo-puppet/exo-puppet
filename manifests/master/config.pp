@@ -57,7 +57,7 @@ class puppet::master::config {
   }
 
   # Install the foreman push_facts.rb script + cronjob
-  file { '/etc/puppet/foreman_push_facts.rb':
+  file { '/etc/puppet/node.rb':
     ensure  => $puppet::master ? {
       true    => 'present',
       default => 'absent',
@@ -65,13 +65,13 @@ class puppet::master::config {
     owner   => puppet,
     group   => puppet,
     mode    => 555,
-    content => template('puppet/foreman/push_facts.rb.erb'),
+    content => template('puppet/foreman/node.rb.erb'),
   } -> cron { 'send_facts_to_foreman':
     ensure  => $puppet::master ? {
       true    => 'present',
       default => 'absent',
     },
-    command => '/etc/puppet/foreman_push_facts.rb',
+    command => '/etc/puppet/node.rb --push-facts',
     user    => 'puppet',
     minute  => '*/5',
   }
