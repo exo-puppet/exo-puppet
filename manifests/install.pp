@@ -4,64 +4,41 @@
 class puppet::install {
   case $::operatingsystem {
     /(Ubuntu|Debian)/ : {
-      repo::define { 'puppetlab-repo':
-        file_name    => 'puppetlab',
-        url          => $puppet::repo_apt_url,
-        # Natty Nawarl (11.04) is EOL and puppet labs doesn't provide anymore a package for it.
-        # We install lucid packages instead
-        distribution => $::lsbdistrelease ? {
-          /(11.04)/ => 'lucid',
-          default   => '',
-        },
-        sections     => [
-          'main',
-          'dependencies'],
-        source       => false,
-        key          => '4BD6EC30',
-        key_server   => 'keyserver.ubuntu.com',
-        notify       => Exec['repo-update'],
-      }
-
-      # this file remover is here to clean up puppet.list manually added during system installation
-      repo::define { 'puppetlab-oldfile':
-        file_name => 'puppet',
-        url       => 'http://apt.puppetlabs.com/ubuntu',
-        sections  => [
-          'main'],
-        source    => true,
-        installed => false,
-        notify    => Exec['repo-update'],
-      }
-
-      # We need to upgrade augeas and libaugeas_ruby from non official packages
-      # to avoid some bugs/incompatibilities like to edit limits files under
-      # /etc/security/limits.d/
       case $::lsbdistrelease {
-        /(10.04)/ : {
-          repo::define { 'skettler-ppa-repo':
-            file_name  => 'skettler-ppa',
-            url        => 'http://ppa.launchpad.net/skettler/puppet/ubuntu',
-            sections   => [
-              'main'],
-            source     => true,
-            key        => 'C18789EA',
-            key_server => 'keyserver.ubuntu.com',
-            notify     => Exec['repo-update'],
+        /(12.04|14.04|16.04)/ : {
+          repo::define { 'puppetlab-repo':
+            file_name    => 'puppetlab',
+            url          => $puppet::repo_apt_url,
+            sections     => [
+              'main',
+              'dependencies'],
+            source       => false,
+            key          => '4BD6EC30',
+            key_server   => 'keyserver.ubuntu.com',
+            notify       => Exec['repo-update'],
           }
-        }
-        /(10.10)/ : {
-          repo::define { 'raphink-ppa-repo':
-            file_name  => 'raphink-ppa',
-            url        => 'http://ppa.launchpad.net/raphink/augeas/ubuntu',
-            sections   => [
+
+          # this file remover is here to clean up puppet.list manually added during system installation
+          repo::define { 'puppetlab-oldfile':
+            file_name => 'puppet',
+            url       => 'http://apt.puppetlabs.com/ubuntu',
+            sections  => [
               'main'],
-            source     => true,
-            key        => 'AE498453',
-            key_server => 'keyserver.ubuntu.com',
-            notify     => Exec['repo-update'],
+            source    => true,
+            installed => false,
+            notify    => Exec['repo-update'],
           }
         }
         default   : {
+          # this file remover is here to clean up puppetlab.list
+          repo::define { 'puppetlab-repo':
+            file_name => 'puppetlab',
+            url       => $puppet::repo_apt_url,
+            sections  => ['main'],
+            source    => true,
+            installed => false,
+            notify    => Exec['repo-update'],
+          }
         }
       }
     }
@@ -71,35 +48,23 @@ class puppet::install {
   package { [
     'libaugeas-ruby1.8']:
     ensure  => $puppet::params::ensure_mode,
-    require => [
-      Exec['repo-update'],
-      $::lsbdistrelease ? {
-        /(10.04)/ => Repo::Define['puppetlab-repo', 'skettler-ppa-repo'],
-        /(10.10)/ => Repo::Define['puppetlab-repo', 'raphink-ppa-repo'],
-        default   => Repo::Define['puppetlab-repo']
-      } ],
+    require => Repo::Define['puppetlab-repo'],
   } -> package { [
     'augeas-tools',
     'augeas-lenses']:
     ensure  => $puppet::params::ensure_mode,
     require => [
       Exec['repo-update'],
-      $::lsbdistrelease ? {
-        /(10.04)/ => Repo::Define['puppetlab-repo', 'skettler-ppa-repo'],
-        /(10.10)/ => Repo::Define['puppetlab-repo', 'raphink-ppa-repo'],
-        default   => Repo::Define['puppetlab-repo']
-      } ],
+      Repo::Define['puppetlab-repo'],
+    ],
   } -> package { [
     'puppet',
     'facter']:
     ensure  => $puppet::params::ensure_mode,
     require => [
       Exec['repo-update'],
-      $::lsbdistrelease ? {
-        /(10.04)/ => Repo::Define['puppetlab-repo', 'skettler-ppa-repo'],
-        /(10.10)/ => Repo::Define['puppetlab-repo', 'raphink-ppa-repo'],
-        default   => Repo::Define['puppetlab-repo']
-      } ],
+      Repo::Define['puppetlab-repo'],
+    ],
   }
 
   # Master packages
