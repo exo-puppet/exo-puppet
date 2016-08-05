@@ -170,7 +170,8 @@ class puppet (
   $foreman_fqdn              = "forman.${::domain}",
   $foreman_ip                = '127.0.0.1',
   $foreman_port              = 3000,) {
-  include repo
+
+  include apt
 
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {

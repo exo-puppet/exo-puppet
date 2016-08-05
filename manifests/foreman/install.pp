@@ -9,47 +9,37 @@ class puppet::foreman::install {
           $forman_version = '1.7'
           # We need this repo because : http://theforeman.org/manuals/1.7/index.html#3.6Upgrade
           # Ubuntu 12.04 (Precise) users must ensure the Brightbox Ruby NG PPA is configured and that the default Ruby version is 1.8
-          repo::define { 'brightbox-ruby-ng-repo':
-            file_name => 'brightbox-ruby-ng',
-            url       => 'http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu',
-            sections  => [
-              'main'],
-            source    => false,
-            key       => 'C3173AA6',
-            key_server => 'keyserver.ubuntu.com',
-            notify    => Exec['repo-update'],
+          apt::key { 'ppa:brightbox/ruby-ng':
+            id      => '80F70E11F0F0D5F10CB20E62F5DA5F09C3173AA6',
+            server  => 'keyserver.ubuntu.com',
           } ->
-          repo::define { 'foreman-repo':
-            file_name => 'foreman',
-            url       => 'http://deb.theforeman.org/',
-            sections  => [
-              $forman_version],
-            source    => false,
-            key       => '1AA043B8',
-            key_server => 'keyserver.ubuntu.com',
-            notify    => Exec['repo-update'],
+          apt::ppa { 'ppa:brightbox/ruby-ng': ensure => 'present', package_manage => true } ->
+          apt::key { 'foreman':
+            id      => '7059542D5AEA367F78732D02B3484CB71AA043B8',
+            server  => 'keyserver.ubuntu.com',
           } ->
-          repo::define { 'foreman-plugin-repo':
-            file_name => 'foreman-plugins',
-            url       => 'http://deb.theforeman.org/',
-            distribution  => 'plugins',
-            sections  => [
-              $forman_version],
-            source    => false,
-            notify    => Exec['repo-update'],
+          apt::source { 'foreman':
+            location => 'http://deb.theforeman.org/',
+            repos    => $forman_version,
+          } ->
+          apt::source { 'foreman-plugins':
+            location       => 'http://deb.theforeman.org/',
+            repos          => $forman_version,
+            release        => 'plugins',
           }
 
-            package { 'passenger-common':
-              ensure  => $puppet::params::ensure_mode,
-              name    => 'passenger-common1.9.1',
-              require => [
-                Exec['repo-update'],
-                Repo::Define['foreman-repo']],
-            }
+          # ensure_packages ( 'passenger-common', {
+          #   'ensure'  => $puppet::params::ensure_mode,
+          #   'name'    => 'passenger-common1.9.1',
+          #   'require' => [Apt::Source['foreman'],Class['apt::update']],
+          # } )
+          ensure_packages ( ['foreman','foreman-mysql2'], {
+            'ensure' => $puppet::params::ensure_mode,
+            'require' => [Apt::Source['foreman'],Class['apt::update'],Package['ruby1.9.3']],
+          } )
         }
         default   : {
-          fail("The ${module_name} module is not supported on ${::operatingsystem} ${::lsbdistrelease} (only 12.04 Precise is supported)"
-          )
+          fail("The ${module_name} module is not supported on ${::operatingsystem} ${::lsbdistrelease} (only 12.04 Precise is supported)" )
         }
       }
     }
@@ -57,10 +47,4 @@ class puppet::foreman::install {
       fail("The ${module_name} module is not supported on ${::operatingsystem}")
     }
   }
-  package { 'foreman':
-    ensure  => $puppet::params::ensure_mode,
-    require => [
-      Exec['repo-update'],
-      Repo::Define['foreman-repo']],
-  } -> package { 'foreman-mysql2': ensure => $puppet::params::ensure_mode, }
 }

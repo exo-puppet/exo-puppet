@@ -6,65 +6,56 @@ class puppet::install {
     /(Ubuntu|Debian)/ : {
       case $::lsbdistrelease {
         /(12.04|14.04|16.04)/ : {
-          repo::define { 'puppetlab-repo':
-            file_name    => 'puppetlab',
-            url          => $puppet::repo_apt_url,
-            sections     => [
-              'main',
-              'dependencies'],
-            source       => false,
-            key          => '4BD6EC30',
-            key_server   => 'keyserver.ubuntu.com',
-            notify       => Exec['repo-update'],
-          }
 
-          # this file remover is here to clean up puppet.list manually added during system installation
-          repo::define { 'puppetlab-oldfile':
-            file_name => 'puppet',
-            url       => 'http://apt.puppetlabs.com/ubuntu',
-            sections  => [
-              'main'],
-            source    => true,
-            installed => false,
-            notify    => Exec['repo-update'],
+          apt::source { 'puppetlabs':
+            location => 'http://apt.puppetlabs.com',
+            repos    => 'main dependencies',
+            key      => {
+              'id'     => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
+              'server' => 'pgp.mit.edu',
+            },
           }
+          # Agent packages
+          # ensure_packages ( 'libaugeas-ruby1.8',    { 'ensure' => $puppet::params::ensure_mode, 'require' => [Apt::Source['puppetlabs'],Class['apt::update'] } )
+          # ensure_packages ( 'libaugeas-ruby1.9.1',  { 'ensure' => $puppet::params::ensure_mode, 'require' => [Apt::Source['puppetlabs'],Class['apt::update']] } )
+          # ensure_packages ( 'augeas-tools',         { 'ensure' => $puppet::params::ensure_mode, 'require' => [Apt::Source['puppetlabs'],Class['apt::update'] } )
+          # ensure_packages ( 'augeas-lenses',        { 'ensure' => $puppet::params::ensure_mode, 'require' => [Apt::Source['puppetlabs'],Class['apt::update'] } )
+          # ensure_packages ( 'puppet', { 'ensure' => $puppet::params::ensure_mode, 'require' => Apt::Source['puppetlabs'] } )
+          # ensure_packages ( 'facter', { 'ensure' => $puppet::params::ensure_mode, 'require' => Apt::Source['puppetlabs'] } )
+
+          ensure_packages ([
+            'libaugeas-ruby1.8',
+            'libaugeas-ruby1.9.1',
+            'augeas-tools',
+            'augeas-lenses',
+            'puppet',
+            'facter'
+          ], {
+            'ensure'  => $puppet::params::ensure_mode,
+            'require' => [Apt::Source['puppetlabs'],Class['apt::update']]
+          } )
         }
         default   : {
-          # this file remover is here to clean up puppetlab.list
-          repo::define { 'puppetlab-repo':
-            file_name => 'puppetlab',
-            url       => $puppet::repo_apt_url,
-            sections  => ['main'],
-            source    => true,
-            installed => false,
-            notify    => Exec['repo-update'],
-          }
+          # Agent packages
+          # ensure_packages ( 'libaugeas-ruby1.8', { 'ensure' => $puppet::params::ensure_mode } )
+          # ensure_packages ( 'augeas-tools', { 'ensure' => $puppet::params::ensure_mode } )
+          # ensure_packages ( 'augeas-lenses', { 'ensure' => $puppet::params::ensure_mode } )
+          # ensure_packages ( 'puppet', { 'ensure' => $puppet::params::ensure_mode } )
+          # ensure_packages ( 'facter', { 'ensure' => $puppet::params::ensure_mode } )
+
+          ensure_packages ([
+            'libaugeas-ruby1.8',
+            'augeas-tools',
+            'augeas-lenses',
+            'puppet',
+            'facter'
+          ], {
+            'ensure'  => $puppet::params::ensure_mode,
+            'require' => [Class['apt::update']]
+          } )
         }
       }
     }
-  }
-
-  # Agent packages
-  package { [
-    'libaugeas-ruby1.8']:
-    ensure  => $puppet::params::ensure_mode,
-    require => Repo::Define['puppetlab-repo'],
-  } -> package { [
-    'augeas-tools',
-    'augeas-lenses']:
-    ensure  => $puppet::params::ensure_mode,
-    require => [
-      Exec['repo-update'],
-      Repo::Define['puppetlab-repo'],
-    ],
-  } -> package { [
-    'puppet',
-    'facter']:
-    ensure  => $puppet::params::ensure_mode,
-    require => [
-      Exec['repo-update'],
-      Repo::Define['puppetlab-repo'],
-    ],
   }
 
   # Master packages
