@@ -171,8 +171,6 @@ class puppet (
   $foreman_ip                = '127.0.0.1',
   $foreman_port              = 3000,) {
 
-  include apt
-
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {
     fail('lastversion parameter must be true or false')
