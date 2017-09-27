@@ -10,7 +10,7 @@
 
 days="+7"       # more than 7 days old
 
-for d in `find <%= scope.lookupvar('puppet::params::reportsdir') %> -mindepth 1 -maxdepth 1 -type d`
+for d in `find -L <%= scope.lookupvar('puppet::params::reportsdir') %> -mindepth 1 -maxdepth 1 -type d`
 do
          find $d -type f -name \*.yaml -mtime $days |
          sort -r |
