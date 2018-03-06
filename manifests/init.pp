@@ -35,6 +35,11 @@
 #
 #   The frequency for the puppet agent to execute in seconds
 #
+# [+agent_certname+]
+#   (OPTIONAL) (default: $::fqdn)
+#
+#   The agent certname parameter value in puppet.conf file
+#
 # [+master+]
 #   (OPTIONAL) (default: false)
 #
@@ -151,6 +156,7 @@ class puppet (
   $agent_auto_start          = true,
   $agent_pp_dir              = '/etc/puppet',
   $agent_runinterval         = '1800',
+  $agent_certname            = $::fqdn,
   $master                    = false,
   $master_auto_start         = true,
   $master_fqdn               = "puppet.${::domain}",
